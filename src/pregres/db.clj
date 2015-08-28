@@ -6,7 +6,8 @@
    [clojure.string :as str]
    [hikari-cp.core :as hikari]
    [environ.core :refer :all]
-   [pregres.utils :as utils])
+   [pregres.utils :as utils]
+   [clj-time.jdbc])
   (:import
    [java.sql Timestamp]
    [java.util Date UUID]
@@ -69,7 +70,9 @@
            (reset! (:rollback ~txn) true))))))
 
 ;; -----------------------------------------------------------------------------
-;; Drivers, Serializers, Deserializers
+;; Coercions, Serializers, Deserializers
+
+;; NOTE: (require '[clj.time.jdbc]) above registers sql/time coercions
 
 (defn ->json-pg-object [val]
   (doto (PGobject.)
