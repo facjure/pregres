@@ -19,29 +19,41 @@
 ;; Connection Pooling, Datasource
 
 (defn connect
-  "Create a datasource backed by Hikari Connection Pool, with options.
-   Returns a conn map {:datasource datasource} that can be passed to jdbc/method"
-  [& options]
-  (let [db-uri (java.net.URI. (or (:database-url options)
+  "Create a Connection backed by Hikari Connection Pool, with optional db-spec.
+   If no db-spec is passed, I will connect to localhost:5432/$user, with no pwd."
+  [& db-spec]
+  (let [db-uri (java.net.URI. (or (:database-url db-spec)
                                   (:database-url env)
                                   (str "postgresql://localhost:5432/" (:user env))))
         user-and-password (if (nil? (.getUserInfo db-uri))
                             nil (str/split (.getUserInfo db-uri) #":"))]
     (->> (hikari/make-datasource
           {:auto-commit true
-           :connection-timeout (or (:connection-timeout options) 30000)
-           :validation-timeout (or (:validation-timeout options) 5000)
-           :idle-timeout (or (:idle-timeout options) 600000)
-           :max-lifetime (or (:max-lifetime options) 1800000)
-           :minimum-idle (or (:minimum-idle options) 10)
-           :maximum-pool-size (or (:maximum-pool-size options) 10)
+           :connection-timeout (or (:connection-timeout db-spec) 30000)
+           :validation-timeout (or (:validation-timeout db-spec) 5000)
+           :idle-timeout (or (:idle-timeout db-spec) 600000)
+           :max-lifetime (or (:max-lifetime db-spec) 1800000)
+           :minimum-idle (or (:minimum-idle db-spec) 10)
+           :maximum-pool-size (or (:maximum-pool-size db-spec) 10)
            :adapter "postgresql"
            :username (get user-and-password 0)
            :password (get user-and-password 1)
            :database-name (str/replace-first (.getPath db-uri) "/" "")
            :server-name (.getHost db-uri)
            :port-number (.getPort db-uri)})
-         (assoc {} :datasource))))
+         (.getConnection))))
+
+(defn info
+  "Get Database Information from the current connection"
+  [conn]
+  {:driver-version (.getDriverVersion conn)
+   :driver-name (.getDriverName meta)
+   :db-product-version (.getDatabaseProductVersion meta)
+   :db-product-name (.getDatabaseProductName meta)
+   :db-major-version (.getDatabaseMajorVersion meta)
+   :db-minor-version (.getDatabaseMinorVersion meta)
+   :network-timeout (.getNetworkTimeout conn)
+   :schema-name (.getSchema conn)})
 
 ;; -----------------------------------------------------------------------------
 ;; Transactions
