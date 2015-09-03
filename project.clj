@@ -10,7 +10,7 @@
                  [org.clojure/data.csv "0.1.3"]
                  [org.clojure/tools.logging "0.3.1"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
-                 [org.slf4j/slf4j-log4j12]
+                 [org.slf4j/slf4j-log4j12 "1.6.4"]
                  [prismatic/schema "1.0.0"]
                  [cheshire "5.5.0"]
                  [clj-time "0.10.0"]

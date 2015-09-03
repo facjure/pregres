@@ -15,45 +15,57 @@
    [org.postgresql.util PGobject]
    [java.net.URI]))
 
+;; Managed Datasource
+(def ds (atom {:datasource nil}))
+
 ;; ----------------------------------------------------------------------------
-;; Connection Pooling, Datasource
+;; Connection Pool, Datasource
 
 (defn connect
-  "Create a Connection backed by Hikari Connection Pool, with optional db-spec.
-   If no db-spec is passed, I will connect to localhost:5432/$user, with no pwd."
+  "Create a Connection backed by Hikari Connection Pool, with optional db-spec map.
+   If no db-spec is passed, I will connect to DATABASE_URL environment
+  variable. If that's not found, I will assume a fresh postgres installation at
+  localhost:5432/$user with no auth. Calling connect multiple times is safe, as
+  it does not create another pool: a cached instance is returned."
   [& db-spec]
-  (let [db-uri (java.net.URI. (or (:database-url db-spec)
-                                  (:database-url env)
-                                  (str "postgresql://localhost:5432/" (:user env))))
-        user-and-password (if (nil? (.getUserInfo db-uri))
-                            nil (str/split (.getUserInfo db-uri) #":"))]
-    (->> (hikari/make-datasource
-          {:auto-commit true
-           :connection-timeout (or (:connection-timeout db-spec) 30000)
-           :validation-timeout (or (:validation-timeout db-spec) 5000)
-           :idle-timeout (or (:idle-timeout db-spec) 600000)
-           :max-lifetime (or (:max-lifetime db-spec) 1800000)
-           :minimum-idle (or (:minimum-idle db-spec) 10)
-           :maximum-pool-size (or (:maximum-pool-size db-spec) 10)
-           :adapter "postgresql"
-           :username (get user-and-password 0)
-           :password (get user-and-password 1)
-           :database-name (str/replace-first (.getPath db-uri) "/" "")
-           :server-name (.getHost db-uri)
-           :port-number (.getPort db-uri)})
-         (.getConnection))))
+  (if (nil? (:datasource @ds))
+    (let [db-spec (first db-spec) ;; grab the first db-spec map
+          db-uri (java.net.URI. (or (:database-url db-spec)
+                                    (:database-url env)
+                                    (str "postgresql://localhost:5432/" (:user env))))
+          user-and-password (if (nil? (.getUserInfo db-uri))
+                              nil (str/split (.getUserInfo db-uri) #":"))
+          pooled-ds (->> (hikari/make-datasource
+                          {:auto-commit true
+                           :connection-timeout (or (:connection-timeout db-spec) 30000)
+                           :validation-timeout (or (:validation-timeout db-spec) 5000)
+                           :idle-timeout (or (:idle-timeout db-spec) 600000)
+                           :max-lifetime (or (:max-lifetime db-spec) 1800000)
+                           :minimum-idle (or (:minimum-idle db-spec) 10)
+                           :maximum-pool-size (or (:maximum-pool-size db-spec) 10)
+                           :adapter "postgresql"
+                           :username (get user-and-password 0)
+                           :password (get user-and-password 1)
+                           :database-name (str/replace-first (.getPath db-uri) "/" "")
+                           :server-name (.getHost db-uri)
+                           :port-number (.getPort db-uri)})
+                         (assoc {} :datasource))]
+      (reset! ds pooled-ds))
+    @ds))
 
 (defn info
   "Get Database Information from the current connection"
-  [conn]
-  {:driver-version (.getDriverVersion conn)
-   :driver-name (.getDriverName meta)
-   :db-product-version (.getDatabaseProductVersion meta)
-   :db-product-name (.getDatabaseProductName meta)
-   :db-major-version (.getDatabaseMajorVersion meta)
-   :db-minor-version (.getDatabaseMinorVersion meta)
-   :network-timeout (.getNetworkTimeout conn)
-   :schema-name (.getSchema conn)})
+  [ds]
+  (let [meta (.getMetaData (.getConnection (:datasource ds)))]
+    {:url (.getURL meta)
+     :driver-version (.getDriverVersion meta)
+     :driver-name (.getDriverName meta)
+     :db-product-version (.getDatabaseProductVersion meta)
+     :db-product-name (.getDatabaseProductName meta)
+     :db-major-version (.getDatabaseMajorVersion meta)
+     :db-minor-version (.getDatabaseMinorVersion meta)
+     :types (.getTypeInfo meta)
+     :schemas (.getSchemas meta)}))
 
 ;; -----------------------------------------------------------------------------
 ;; Transactions
