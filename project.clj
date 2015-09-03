@@ -1,4 +1,4 @@
-(defproject pregres "0.1.0-SNAPSHOT"
+(defproject facjure/pregres "0.1.0"
   :description "An integrated Clojure lib for Postgres"
   :url "http://facjure.com/pregres"
   :license {:name "Eclipse Public License" :url "http://www.eclipse.org/legal/epl-v10.html"}
@@ -10,8 +10,8 @@
                  [org.clojure/data.csv "0.1.3"]
                  [org.clojure/tools.logging "0.3.1"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
-                 [prismatic/schema "0.4.3"]
-                 [ch.qos.logback/logback-classic "1.0.1"]
+                 [org.slf4j/slf4j-log4j12]
+                 [prismatic/schema "1.0.0"]
                  [cheshire "5.5.0"]
                  [clj-time "0.10.0"]
                  [environ "1.0.0"]
