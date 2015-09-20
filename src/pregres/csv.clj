@@ -1,7 +1,5 @@
 (ns pregres.csv
-  "Wrapper around clojure-csv library that turn csv in to column-name,
-   column-value key value pair that can be configured via :key-fn, :val-fn
-   and :reader for each field"
+  "Wrapper around clojure-csv to build flexible k/v maps."
   (:require
    [clojure.data.csv :as csv]))
 
@@ -29,32 +27,29 @@
           (#(if skip-header (rest %) %))
           (filter #(not= [""] %))))))
 
-(defn- csv-row->value [csv-row {:keys [val-fn exclude-columns]
-                                :or {val-fn identity}
-                                :as field-reader-opts}]
+(defn import-csv
+  "Turn CSV into column-name, key value pair that can be configured via :key-fn,
+  :val-fn and :reader opts for each field"
+  [csv-row {:keys [key-fn val-fn pred-fn exclude-columns]
+            :or {key-fn identity
+                 val-fn identity
+                 pred-fn (constantly true)}
+            :as field-reader-opts}]
   (let [add-column (fn [m i]
                      (let [col (get csv-row i)
                            field (get field-reader-opts i)]
                        (if (and field
                                 (not (contains? exclude-columns i)))
                          (assoc m (:label field) ((:reader field) col))
-                         m)))]
-    (->> csv-row
-         count
-         range
-         (reduce add-column nil)
-         val-fn)))
-
-(defn csv-rows->coll [csv-rows {:keys [pred-fn]
-                                :or {pred-fn (constantly true)}
-                                :as field-reader-opts}]
-  (->> csv-rows
-       (map #(csv-row->value % field-reader-opts))
-       (filter pred-fn)))
-
-(defn csv-rows->map [csv-rows {:keys [key-fn]
-                               :or {key-fn identity}
-                               :as field-reader-opts}]
-  (reduce #(assoc %1 (key-fn %2) %2)
-          nil
-          (csv-rows->coll csv-rows field-reader-opts)))
+                         m)))
+        csv-row-value (->> csv-row
+                           count
+                           range
+                           (reduce add-column nil)
+                           val-fn)
+        csv-rows->coll (->> csv-row
+                            (map #(csv-row->value % field-reader-opts))
+                            (filter pred-fn))]
+    (reduce #(assoc %1 (key-fn %2) %2)
+            nil
+            (csv-rows->coll csv-row field-reader-opts))))
