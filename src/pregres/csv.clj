@@ -42,7 +42,7 @@
                                 (not (contains? exclude-columns i)))
                          (assoc m (:label field) ((:reader field) col))
                          m)))
-        csv-row-value (->> csv-row
+        csv-row->value (->> csv-row
                            count
                            range
                            (reduce add-column nil)

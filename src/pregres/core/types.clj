@@ -6,7 +6,7 @@
    [clojure.string :as str]
    [hikari-cp.core :as hikari]
    [environ.core :refer :all]
-   [pregres.utils :as utils]
+   [pregres.core.utils :as utils]
    ;; importing clj-time registers sql/time coercions
    [clj-time.jdbc])
   (:import

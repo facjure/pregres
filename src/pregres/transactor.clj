@@ -3,7 +3,7 @@
   (:require
    [clojure.java.jdbc :as jdbc]
    [clojure.string :as str]
-   [pregres.utils :as utils]
+   [pregres.core.utils :as utils]
    [pregres.db :as db]
    [clj-time.jdbc])
   (:import

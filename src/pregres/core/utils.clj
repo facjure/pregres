@@ -1,4 +1,4 @@
-(ns pregres.utils
+(ns pregres.core.utils
   (:require [clojure.string :as str])
   (:import
    java.io.ByteArrayOutputStream
