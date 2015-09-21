@@ -12,6 +12,7 @@
                  [org.clojure/tools.logging "0.3.1"]
                  [org.postgresql/postgresql "9.4-1203-jdbc41"]
                  [org.slf4j/slf4j-log4j12 "1.6.4"]
+                 [com.stuartsierra/component "0.3.0"]
                  [prismatic/schema "1.0.1"]
                  [cheshire "5.5.0"]
                  [clj-time "0.11.0"]

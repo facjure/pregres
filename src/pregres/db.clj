@@ -31,7 +31,7 @@
                     :idle-timeout (or (:idle-timeout db-spec) 600000)
                     :max-lifetime (or (:max-lifetime db-spec) 1800000)
                     :minimum-idle (or (:minimum-idle db-spec) 10)
-                    :maximum-pool-size (or (:maximum-pool-size db-spec) 20)
+                    :maximum-pool-size (or (:maximum-pool-size db-spec) 100)
                     :adapter "postgresql"
                     :username (get user-and-password 0)
                     :password (get user-and-password 1)
