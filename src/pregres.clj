@@ -8,12 +8,22 @@
   component/Lifecycle
 
   (start [component]
-    (log/info "Starting database")
-    (let [conn (db/connect db-spec)]
-      (assoc component :connection conn)))
+    (if connection
+      component
+      (do (log/info "Starting database")
+          (let [conn (db/connect db-spec)]
+            (assoc component :connection conn)))))
 
   (stop [component]
-    (log/info "Stopping database")
-    (db/disconnect connection)
-    (assoc component :connection nil)))
+    (if (not connection)
+      component
+      (do
+        (log/info "Stopping database")
+        (db/disconnect connection)
+        (assoc component :connection nil)))))
 
+
+(defn new-Database
+  "Create a new Database Component"
+  [db-spec]
+  (map->Database {:db-spec db-spec}))

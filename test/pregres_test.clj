@@ -9,4 +9,4 @@
 
 (deftest components
   (testing "starting, components"
-    (new-database db-spec)))
+    (new-Database db-spec)))
