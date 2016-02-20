@@ -1,25 +1,22 @@
 # Pregres
 
-A Clojure framework for building data services on [Postgres] (https://github.com/pgjdbc/pgjdbc) using [Component](https://github.com/stuartsierra/component), [Schema](https://github.com/Prismatic/schema) and [YeSQL](https://github.com/krisajenkins/yesql). 
+An immutable interface to [Postgres]
+(https://github.com/pgjdbc/pgjdbc), built on
+[Component](https://github.com/stuartsierra/component),
+[Schema](https://github.com/Prismatic/schema) and
+[YeSQL](https://github.com/krisajenkins/yesql).
 
-## Usage
+## Contributing
 
-Coming Soon.
-
-## Credits
-
-Some functions are copied from the following libraries. I remain thankful to them.
- 
-- [audit triggers](https://github.com/2ndQuadrant/audit-trigger)
-- [clojure.jdbc](https://github.com/funcool/clojure.jdbc)
-- [clj-postgresql](https://github.com/remodoy/clj-postgresql)
-- [pg-migrator](https://github.com/aphel-bilisim-hizmetleri/pg-migrator)
-- [sparkx-kits](https://github.com/staples-sparx/kits)
+Pregres is currently in the design phase. 
 
 ## Status
 
-Development, _unstable_.
+Unstable.
+
+I'm currently reading Postgres and H2 java drivers to build EAVT [indexes](http://docs.datomic.com/indexes.html), influenced by Datomic.
 
 ## License
 
-Copyright © 2015, Facjure, LLC. Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.
+Copyright © 2015-2016, Facjure, LLC. Distributed under the Eclipse Public
+License either version 1.0 or (at your option) any later version.
