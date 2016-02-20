@@ -19,7 +19,7 @@
    pool."
   [& db-spec]
   (let [db-uri (java.net.URI. (or (:database-url db-spec)
-                                  (str "postgresql://localhost:5432/pregres")))
+                                  (str "postgresql://localhost:5432/postgres")))
         user-and-password (if (nil? (.getUserInfo db-uri))
                             nil (str/split (.getUserInfo db-uri) #":"))
         pooled-ds (hikari/make-datasource

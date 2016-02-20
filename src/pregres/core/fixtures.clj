@@ -1,4 +1,4 @@
-(ns pregres.core.test-fixtures
+(ns pregres.core.fixtures
   (:require [clojure.test :refer :all]
             [schema.core :as s]
             [pregres.db :as db]))
