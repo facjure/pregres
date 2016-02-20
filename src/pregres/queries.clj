@@ -5,7 +5,6 @@
    [clojure.string :as str]
    [clojure.java.io :as io]
    [hikari-cp.core :as hikari]
-   [environ.core :refer :all]
    [pregres.db :as db]
    [pregres.core.utils :as utils])
   (:import
@@ -15,8 +14,7 @@
    [org.postgresql.util PGobject]
    [java.net.URI]))
 
-;; -------
-;; Helpers
+;; Helpers -----
 
 (defn- row-transform [only-id? row]
   (if only-id?
@@ -38,8 +36,7 @@
                (repeat (count xs))
                (str/join ", "))))
 
-;; ---
-;; API
+;; API -----
 
 (defn create [db table m & {:keys [only-id?] :or {only-id? true}}]
   (->> (jdbc/insert! db table m :entities utils/keyword->underscored-string)
@@ -92,4 +89,3 @@
   [ds sql-file]
   (let [commands (slurp (io/resource sql-file))]
     (jdbc/db-do-commands ds commands)))
-

@@ -5,9 +5,7 @@
    [cheshire.core :as json]
    [clojure.string :as str]
    [hikari-cp.core :as hikari]
-   [environ.core :refer :all]
    [pregres.core.utils :as utils]
-   ;; importing clj-time registers sql/time coercions
    [clj-time.jdbc])
   (:import
    [java.sql Timestamp]
@@ -15,6 +13,8 @@
    [org.postgresql.jdbc4 Jdbc4Array]
    [org.postgresql.util PGobject]
    [java.net.URI]))
+
+;; Note: importing clj-time above registers sql/time coercions
 
 ;; ----------------
 ;; Coercion Helpers
@@ -28,12 +28,12 @@
 (defn json-pg-object->clj [^PGobject pg-obj]
   (json/decode (.getValue pg-obj) keyword))
 
-(defn ->pg-uuid-array [^org.postgresql.jdbc4.Jdbc4Connection conn coll]
+(defn ->pg-uuid-array [conn coll]
   (let [coll (map #(UUID/fromString %) coll)]
     (.createArrayOf conn "uuid" (into-array coll))))
 
-(defn to-vec [^Jdbc4Array jdbc-arr]
-  (vec (.getArray ^Jdbc4Array jdbc-arr)))
+(defn to-vec [jdbc-arr]
+  (vec (.getArray jdbc-arr)))
 
 ;; -------------------
 ;; Protocol Extensions

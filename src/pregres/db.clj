@@ -6,7 +6,6 @@
    [clojure.string :as str]
    [clojure.tools.logging :as log]
    [clj-time.jdbc]
-   [environ.core :refer :all]
    [hikari-cp.core :as hikari]
    [pregres.core.utils :as utils]
    [pregres.core.types :as types]))
@@ -20,8 +19,7 @@
    pool."
   [& db-spec]
   (let [db-uri (java.net.URI. (or (:database-url db-spec)
-                                  (:database-url env)
-                                  (str "postgresql://localhost:5432/" (:user env))))
+                                  (str "postgresql://localhost:5432/pregres")))
         user-and-password (if (nil? (.getUserInfo db-uri))
                             nil (str/split (.getUserInfo db-uri) #":"))
         pooled-ds (hikari/make-datasource
