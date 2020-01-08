@@ -1,18 +1,15 @@
 (ns pregres.queries
   (:refer-clojure :exclude [find read update])
-  (:require
-   [clojure.java.jdbc :as jdbc]
-   [clojure.string :as str]
-   [clojure.java.io :as io]
-   [hikari-cp.core :as hikari]
-   [pregres.db :as db]
-   [pregres.core.utils :as utils])
-  (:import
-   [java.sql Timestamp]
-   [java.util Date UUID]
-   [org.postgresql.jdbc4 Jdbc4Array]
-   [org.postgresql.util PGobject]
-   [java.net.URI]))
+  (:require [clojure.java.jdbc :as jdbc]
+            [clojure.string :as str]
+            [clojure.java.io :as io]
+            [hikari-cp.core :as hikari]
+            [pregres.db :as db]
+            [pregres.utils :as utils])
+  (:import [java.sql Timestamp]
+           [java.util Date UUID]
+           [org.postgresql.util PGobject]
+           [java.net URI]))
 
 ;; Helpers -----
 

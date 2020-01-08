@@ -3,9 +3,9 @@
   (:require
    [clojure.java.jdbc :as jdbc]
    [clojure.string :as str]
-   [pregres.core.utils :as utils]
+   [pregres.utils :as utils]
    [pregres.db :as db]
-   [clj-time.jdbc])
+   [pregres.types])
   (:import
    [java.sql Timestamp]
    [java.util Date UUID]))

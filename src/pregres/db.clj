@@ -5,11 +5,12 @@
    [cheshire.core :as json]
    [clojure.string :as str]
    [clojure.tools.logging :as log]
-   [clj-time.jdbc]
    [hikari-cp.core :as hikari]
-   [pregres.core.utils :as utils]
-   [pregres.core.types :as types]))
+   [pregres.utils :as utils]
+   [pregres.types :as types]))
 
+
+;; TODO Fine tune defaults
 (defn connect
   "Connect to the specified database and return a Connection backed by Hikari Pool.
    If db-spec map is passed, connect to DATABASE_URL environment variable. If

@@ -1,8 +1,7 @@
 (ns pregres.migrator
   "SQL schema migration library"
-  (:require
-   [ragtime.jdbc :as jdbc]
-   [ragtime.repl :as repl])
+  (:require [ragtime.jdbc :as jdbc]
+            [ragtime.repl :as repl])
   (:import (java.sql Timestamp)))
 
 (defn load-config [env]

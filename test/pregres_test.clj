@@ -1,7 +1,7 @@
 (ns pregres-test
   (:require
    [clojure.test :refer :all]
-   [pregres.core.fixtures :as fixtures]
+   [pregres.fixtures :as fixtures]
    [pregres :refer :all]))
 
 (use-fixtures :once fixtures/db)

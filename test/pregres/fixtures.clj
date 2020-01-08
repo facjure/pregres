@@ -1,6 +1,5 @@
-(ns pregres.core.fixtures
-  (:require [clojure.test :refer :all]
-            [schema.core :as s]
+(ns pregres.fixtures
+  (:require [clojure.test :as test]
             [pregres.db :as db]))
 
 (defn db [f]
