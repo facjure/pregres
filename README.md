@@ -27,6 +27,30 @@ simply shine with idiomatic Clojure.
 - Plain old SQL using [HugSQL](https://www.hugsql.org/) 
 - Integration with popular Postgres extensions (postgis)
 
+## Setup
+
+Install Postgres Docker
+
+	docker pull postgres
+	
+Create Local volume (optional)
+
+	mkdir $HOME/.docker/volumes/postgres
+	
+Run Postgres with username 'postgres', password 'docker'
+	 
+	 docker run --name postgres -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v $HOME/.docker/volumes/postgres:/var/lib/postgresql/data  postgres
+	 
+Start Psql
+
+	docker exec -it postgres bash
+	root@somehost100> psql -U postgres
+	
+Run Tests
+	
+	lein test
+	
+	
 ## Credits
 
 Some functions are copied from the following libraries. I remain thankful to them.

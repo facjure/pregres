@@ -7,7 +7,3 @@
 (use-fixtures :once fixtures/db)
 
 (def db-spec {:database-url "postgresql://localhost:5432/"})
-
-(deftest components
-  (testing "starting, components"
-    (new-Database db-spec)))
